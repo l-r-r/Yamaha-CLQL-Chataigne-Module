@@ -1,0 +1,147 @@
+
+
+<---- Protocol Description ---->
+
+
+
+Console is a TCP Server listening on port 49280.
+
+PC -> console
+
+"set " + msg x y z 	  	 -> 	set z value to parameter defined by msg and x and y values						
+"get " + msg x y	  	 -> 	get value of parameter defined by msg and x and y values
+
+console -> PC
+
+"OK set " + msg x y z 	 ->		delivery report of "set" command
+"OK get " + msg x y z	 ->		response to "get" command with current value z
+"NOTIFY set" + msg x y z ->		signal parameters changes on console (if it's not relative of a previously sent "set" command)
+
+
+
+<---- Messages List ---->
+
+
+
+(Line starting by "???" are to be tested)
+
+
+-- Input Channels --
+
+MIXER:Current/InCh/Fader/Level x 0 z
+MIXER:Current/InCh/Fader/On x 0 z
+
+MIXER:Current/InCh/ToSt/Pan x 0 z
+
+MIXER:Current/InCh/ToMix/Level x y z
+MIXER:Current/InCh/ToMix/On x y z
+MIXER:Current/InCh/ToMix/Pan x y z
+MIXER:Current/InCh/ToMix/PrePost x 0 z
+
+MIXER:Current/InCh/ToMtrx/Level x y z
+MIXER:Current/InCh/ToMtrx/On x y z
+MIXER:Current/InCh/ToMtrx/Pan x y z
+MIXER:Current/InCh/ToMtrx/PrePost x y z
+
+
+-- Stereo Input Channels --
+
+(To answer : why StIn and StInCh for each message ?)
+
+MIXER:Current/StIn/Fader/Level x 0 z
+MIXER:Current/StIn/Fader/On x 0 z
+
+MIXER:Current/StIn/ToSt/Pan x 0 z
+
+MIXER:Current/StIn/ToMix/Level x y z
+MIXER:Current/StIn/ToMix/On x y z
+???	MIXER:Current/StIn/ToMix/Pan x y z
+MIXER:Current/StIn/ToMix/PrePost x 0 z
+
+MIXER:Current/StIn/ToMtrx/Level x y z
+MIXER:Current/StIn/ToMtrx/On x y z
+???	MIXER:Current/StIn/ToMtrx/Pan x y z
+MIXER:Current/StIn/ToMtrx/PrePost x 0 z
+
+
+-- Mix --
+
+MIXER:Current/Mix/Fader/Level x 0 z
+MIXER:Current/Mix/Fader/On x 0 z
+
+MIXER:Current/Mix/ToSt/Pan x 0 z
+
+???	MIXER:Current/Mix/ToMtrx/Level x y z
+???	MIXER:Current/Mix/ToMtrx/On x y z
+???	MIXER:Current/Mix/ToMtrx/Pan x y z
+???	MIXER:Current/Mix/ToMtrx/PrePost x y z
+
+(if stereo bus)
+MIXER:Current/Mix/Out/Balance x 0 z
+
+
+-- Matrix --
+
+MIXER:Current/Mtrx/Fader/Level x 0 z
+MIXER:Current/Mtrx/Fader/On x 0 z
+
+(if stereo bus)
+MIXER:Current/Mix/Out/Balance x 0 z
+
+
+-- Main Outs --
+
+MIXER:Current/St/Fader/Level x 0 z
+MIXER:Current/St/Fader/On x 0 z
+
+(x has to be StL=0 or StL=1)
+MIXER:Current/St/Out/Balance x 0 z
+
+???	MIXER:Current/Mix/ToMtrx/Level x y z
+???	MIXER:Current/Mix/ToMtrx/On x y z
+???	MIXER:Current/Mix/ToMtrx/Pan x y z
+???	MIXER:Current/Mix/ToMtrx/PrePost x y z
+
+
+-- DCA --
+
+MIXER:Current/DCA/Fader/Level x 0 z
+MIXER:Current/DCA/Fader/On x 0 z
+
+
+-- Mute Master --
+
+MIXER:Current/MuteMaster/On x 0 z
+
+
+
+<---- Value Range ---->
+
+
+
+x = channel number
+	Ch01 is 0, Ch02 is 1, ... Ch72 is 71
+	StIn01 is 0 and 1, StIn02 is 2 and 3 ... StIn08 is 14 and 15
+	Mix01 is 0 ... Mix24 is 23
+	Mtx1 is 0 ... Mtx8 is 7
+	StL is 0, StR is 1, Mono is 2
+	DCA1 is 0 ... DCA8 is 7
+	Mute 1 is 0 ... Mute 8 is 7
+
+
+y = mix/matrix number for sends, same value as x
+
+
+z = value of parameter
+	Level = dBx100 (from -32768 = -inf to 1000 = +10.00 dB)
+	Pan/Balance = -63 to 63 (63L to 63R)
+	On = 0 "OFF" / 1 "ON"
+	PrePost = 0 "Post" / 1 "Pre"
+
+
+
+
+
+
+
+
