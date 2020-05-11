@@ -1,0 +1,130 @@
+{
+	"name":"Yamaha CL/QL",
+	"type":"TCP Client",
+	"path":"Hardware",
+	
+	"version":"0.0.1",
+	"description":"Basic control of Yamaha CL/QL consoles over network",
+	
+	"hasInput":true,
+	"hasOutput":true, 
+
+	"hideDefaultCommands":true,
+
+	"hideDefaultParameters":
+	[
+		"protocol",
+		"messageStructure",
+		"autoAdd",
+		"firstValueIsTheName",
+		"receiveFrequency",
+		"output/local",
+		"output/RemotePort",
+		"pass_through",
+	],
+
+	"parameters":
+	{
+		"Model":
+		{
+			"type":"Enum",
+			"options":
+			{
+				"Please select...":"none",
+				"CL1":"cl1",
+				"CL3":"cl3",
+				"CL5":"cl5",
+				"QL1":"ql1",
+				"QL5":"ql5"
+			}
+		}
+	},
+
+	"defaults":
+	{
+		"autoAdd":false,
+		"firstValueIsTheName":false,
+		"Output":
+		{
+			"RemotePort":49280,
+			"RemoteHost":"127.0.0.1",
+			"local":false
+		}
+	},
+
+	"scripts":
+	[
+		"YamahaCLQL.js"
+	],
+
+	"values":
+	{
+
+		"Input Channels":
+		{
+			"type":"Container",
+			"collapsed":true
+		},
+
+		"Stereo Input Channels":
+		{
+			"type":"Container",
+			"collapsed":true
+		},
+
+		"Main Outs":
+		{
+			"type":"Container",
+			"collapsed":true
+		},
+
+		"Mix Outs":
+		{
+			"type":"Container",
+			"collapsed":true
+		},
+
+		"Matrix Outs":
+		{
+			"type":"Container",
+			"collapsed":true
+		},
+
+		"DCAs":
+		{
+			"type":"Container",
+			"collapsed":true
+		}
+	},
+
+	"commands":
+	{
+		"Get value":
+		{
+			"menu":"",
+			"callback":"getValueCallback",
+			"parameters":
+			{
+				"Command":
+				{
+					"type":"String"
+				}
+			}
+		},
+
+		"Set value":
+		{
+			"menu":"",
+			"callback":"setValueCallback",
+			"parameters":
+			{
+				"Command":
+				{
+					"type":"String"
+				}
+			}
+		}
+	}
+
+
+}
