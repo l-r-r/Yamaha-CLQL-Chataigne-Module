@@ -123,8 +123,100 @@
 					"type":"String"
 				}
 			}
+		},
+
+		"Set Scene":
+		{
+			"menu":"",
+			"callback":"SetScene",
+			"parameters":
+			{
+				"Scene":
+				{
+					"type":"Integer",
+					"min":0,
+					"max":99
+				}
+			}
+		},
+
+		"Channels Control":
+		{
+			"menu":"",
+			"callback":"tests",
+			"parameters":
+			{
+				"On": 
+				{
+					"type":"Boolean"
+				},
+
+				"Pan":
+				{
+					"type":"Integer",
+					"min":-63,
+					"max":63
+				},              
+
+				"Fader":
+				{ 
+					"type":"Float",
+					"min":-60,
+					"max":10
+				},
+
+					"Channel Type":
+				{			
+					"type":"Enum",
+					"options":
+					{
+						"Input":"input",
+						"Output":"output",
+						"Master":"master"
+					},
+				},
+
+
+				"Destination":
+				{			
+					"type":"Enum",
+					"options":
+					{
+						"Unique":"unique",
+						"From To":"fromTo",
+						"All":"all"
+					},
+				},
+
+				"Channel Num":
+				{
+					"type":"Integer",
+					"min":1,
+					"max":72,
+					"dependency": 
+					{
+						"source":"destination",
+						"value":"all",
+						"check":"notEquals",
+						"action":"show"
+					}
+				},
+
+
+				"To Channel Num":
+				{
+					"type":"Integer",
+					"min":1,
+					"max":72,
+					"dependency": 
+					{
+						"source":"destination",
+						"value":"fromTo",
+						"check":"equals",
+						"action":"show"
+					}
+				},            
+			}
 		}
 	}
-
-
 }
