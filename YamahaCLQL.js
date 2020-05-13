@@ -1,3 +1,5 @@
+var debug = true;
+
 var lastNotifyMsg = "";
 
 // MonoIns, StIns, Mix, Matrix, DCA (MainOuts are always Stereo and Mono)
@@ -32,6 +34,9 @@ function init()
 		}
 	}
 
+
+
+	// TESTING ZONE
 }
 
 
@@ -138,8 +143,6 @@ function moduleValueChanged(value)
 		if((ptclPath != "") && (chanCont != "stereoIns"))
 		{
 			// Get the channel number from the number of the container, "-1" to change to correct range for protocol
-			script.log(value.getParent().name);
-			script.log("parseInt : "+parseInt(value.getParent().name));
 			var chanNum = parseInt(value.getParent().name) - 1;
 
 			msg = "set MIXER:Current/"+ptclPath+"/";
@@ -182,8 +185,13 @@ function dataReceived(data)
 	// 	dataSplit			0      1.  2.                          3 4 5 6
 	// 	cmdPathSplit						 0.      1.   2.    3
 	//
-	//								    /!\  Current/MuteMaster/On, so prefer use of "cmdPathSplit.length-x" instead of direct index
+	//								    /!\  Current/MuteMaster/On. 
 	//										 0       1.         2. 
+
+	if(debug)
+	{
+		script.log(data);
+	}
 
 	var msgRcvd = JSON.parse('{"category":"", "action": "", "target":"", "path":[], "params": {"x":0, "y":0, "z":0}, "strValue":""}');
 	var dataSplit = data.split(' ');
@@ -207,22 +215,22 @@ function dataReceived(data)
 				msgRcvd['target'] = totalPathSplit[0];
 				msgRcvd['path'] = totalPathSplit[1].split('/');
 
-				msgRcvd['params']['x'] == dataSplit[i+3];
+				msgRcvd['params']['x'] = parseInt(dataSplit[i+3]);
 
 				if((msgRcvd['action'] == "get") || (msgRcvd['action'] == "set"))
 				{
-					msgRcvd['params']['y'] == dataSplit[i+4];
-					msgRcvd['params']['z'] == dataSplit[i+5];
+					msgRcvd['params']['y'] = parseInt(dataSplit[i+4]);
+					msgRcvd['params']['z'] =parseInt(dataSplit[i+5]);
 
-					msgRcvd['strValue'] == dataSplit[i+6];
+					msgRcvd['strValue'] = dataSplit[i+6];
 					i += 7;
 				}
 				else
 				{
-					msgRcvd['params']['y'] == 0;
-					msgRcvd['params']['z'] == 0;
+					msgRcvd['params']['y'] = 0;
+					msgRcvd['params']['z'] = 0;
 
-					msgRcvd['strValue'] == "";
+					msgRcvd['strValue'] = "";
 					i += 4;
 				}
 
@@ -247,19 +255,39 @@ function dataReceived(data)
 
 function processMsgRcvd(msg)
 {
-	var valueContainer = root.values;
+	var valueContainer = local.values;
 	var jsonCursor = pathToContainer;
 
-	var containerName = "";
+	var msgLength = msg['path'].length;
 
-	for(var i=1;i<msg['path'].length;i++)
+	for(var i=1;i<msgLength-1;i++)
 	{
-		if(true)
-		{
+		jsonCursor = jsonCursor[msg['path'][i]];
+		var containerName = jsonCursor['container'];
 
+		if(containerName != undefined)
+		{
+			valueContainer = valueContainer.getChild(containerName);
+			if(debug){script.log(valueContainer.getControlAddress());}
+
+			var index = jsonCursor['indexContainer'];
+			if(index != undefined)
+			{
+				valueContainer = valueContainer.getChild(int2Str_2Chars((msg['params'][index]+1)));
+				if(debug){script.log(valueContainer.getControlAddress());}
+			}
 		}
 	}
 
+	var targetValue = msg['path'][msgLength-1];
+	var z = msg['params']['z'];
+
+	if(targetValue == "Level")
+	{
+		z = int2dB(z);
+	}
+
+	valueContainer.getChild(targetValue).set(z);
 }
 
 function getValueCallback(command)
@@ -304,4 +332,8 @@ function container2ptclPath(str)
 function sendMessage(message)
 {
 	local.send(message+"\n");
+	if(debug)
+	{
+		script.log(message);
+	}
 }

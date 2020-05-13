@@ -2,9 +2,9 @@
 	"InCh":
 	{
 		"container":"monoIns",
+		"indexContainer":"x",
 		"Fader":
 		{
-			"container":false,
 			"values":
 			[
 				"on",
@@ -13,7 +13,6 @@
 		},
 		"ToSt":
 		{
-			"container":false,
 			"values":
 			[
 				"pan"
@@ -22,9 +21,10 @@
 		"ToMix":
 		{
 			"container":"mixSends",
+			"indexContainer":"y",
 			"values":
 			[
-				"pan",
+				"on",
 				"prePost",
 				"level",
 				"pan"
@@ -33,9 +33,10 @@
 		"ToMtrx":
 		{
 			"container":"matrixSends",
+			"indexContainer":"y",
 			"values":
 			[
-				"pan",
+				"on",
 				"prePost",
 				"level",
 				"pan"
@@ -45,9 +46,9 @@
 	"StIn":
 	{
 		"container":"stereoIns",
+		"indexContainer":"x",
 		"Fader":
 		{
-			"container":false,
 			"values":
 			[
 				"on",
@@ -56,7 +57,6 @@
 		},
 		"ToSt":
 		{
-			"container":false,
 			"values":
 			[
 				"pan"
@@ -65,9 +65,10 @@
 		"ToMix":
 		{
 			"container":"mixSends",
+			"indexContainer":"y",
 			"values":
 			[
-				"pan",
+				"on",
 				"prePost",
 				"level",
 				"pan"
@@ -76,9 +77,10 @@
 		"ToMtrx":
 		{
 			"container":"matrixSends",
+			"indexContainer":"y",
 			"values":
 			[
-				"pan",
+				"on",
 				"prePost",
 				"level",
 				"pan"
@@ -88,9 +90,9 @@
 	"Mix":
 	{
 		"container":"mixOuts",
+		"indexContainer":"x",
 		"Fader":
 		{
-			"container":false,
 			"values":
 			[
 				"on",
@@ -99,7 +101,6 @@
 		},
 		"ToSt":
 		{
-			"container":false,
 			"values":
 			[
 				"pan"
@@ -108,9 +109,10 @@
 		"ToMtrx":
 		{
 			"container":"matrixSends",
+			"indexContainer":"y",
 			"values":
 			[
-				"pan",
+				"on",
 				"prePost",
 				"level",
 				"pan"
@@ -128,9 +130,9 @@
 	"Mtrx":
 	{
 		"container":"matrixOuts",
+		"indexContainer":"x",
 		"Fader":
 		{
-			"container":false,
 			"values":
 			[
 				"on",
@@ -149,9 +151,9 @@
 	"DCA":
 	{
 		"container":"dCAs",
+		"indexContainer":"x",
 		"Fader":
 		{
-			"container":false,
 			"values":
 			[
 				"on",
@@ -162,9 +164,9 @@
 	"St":
 	{
 		"container":"masterOuts",
+		"indexContainer":"x",
 		"Fader":
 		{
-			"container":false,
 			"values":
 			[
 				"on",
@@ -174,9 +176,10 @@
 		"ToMtrx":
 		{
 			"container":"matrixSends",
+			"indexContainer":"y",
 			"values":
 			[
-				"pan",
+				"on",
 				"prePost",
 				"level",
 				"pan"
