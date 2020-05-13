@@ -62,19 +62,13 @@
 	"values":
 	{
 
-		"Input Channels":
+		"Mono Ins":
 		{
 			"type":"Container",
 			"collapsed":true
 		},
 
-		"Stereo Input Channels":
-		{
-			"type":"Container",
-			"collapsed":true
-		},
-
-		"Main Outs":
+		"Stereo Ins":
 		{
 			"type":"Container",
 			"collapsed":true
@@ -93,6 +87,12 @@
 		},
 
 		"DCAs":
+		{
+			"type":"Container",
+			"collapsed":true
+		},
+
+		"Master Outs":
 		{
 			"type":"Container",
 			"collapsed":true

@@ -2,26 +2,36 @@ var lastNotifyMsg = "";
 
 // MonoIns, StIns, Mix, Matrix, DCA (MainOuts are always Stereo and Mono)
 var currentChannelNumbers = [72, 8, 24, 8, 16];
-var channelContainerNames = ["inputChannels", "stereoInputChannels", "mixOuts", "matrixOuts", "dCAs"];
-var descriptionPrefixes = ["In", "StIn", "Mix", "Matrix", "DCA"];
+var channelContainerNames = ["monoIns", "stereoIns", "mixOuts", "matrixOuts", "dCAs", "masterOuts"];
+var descriptionPrefixes = ["In", "StIn", "Mix", "Matrix", "DCA", "St"];
+
+
+var pathToContainer = util.readFile("~/Documents/Chataigne/modules/Yamaha-CLQL-Chataigne-Module/pathToContainer.json", true);
+
+
 
 function init()
 {
-	createChannel(local.values.getChild("mainOuts"), "Stereo", "st", "");
-	createChannel(local.values.getChild("mainOuts"), "Mono", "mono", "");
+	createChannel(local.values.getChild("masterOuts"), "Stereo", "st", "");
+	createChannel(local.values.getChild("masterOuts"), "Mono", "mono", "");
+
+	var chType = "";
 
 	for(var j=0;j<5;j++)
 	{
 		var currChCont = local.values.getChild(channelContainerNames[j]);
 
+		chType = (j==4)?"dca":"ch";
+
 		for(var i=0;i<currentChannelNumbers[j];i++)
 		{
-			createChannel(currChCont, int2Str_2Chars(i+1), (j==5)?"dca":"ch", descriptionPrefixes[j]);
+			createChannel(currChCont, int2Str_2Chars(i+1), chType, descriptionPrefixes[j]);
 
 			// Disabling all the channels at the creation of the module to force to choose a model
 			//disableChannel(currChCont, int2Str_2Chars(i+1), (j==5)?"dca":"ch");
 		}
 	}
+
 }
 
 
@@ -70,14 +80,14 @@ function rebuildConsole(model)
 		{
 			for(var i=currentChannelNumbers[j];i<newChannelNumbers[j];i++)
 			{
-				enableChannel(currChCont, int2Str_2Chars(i+1), (j==5)?"dca":"ch");
+				enableChannel(currChCont, int2Str_2Chars(i+1), (j==4)?"dca":"ch");
 			}
 		}
 		else if(newChannelNumbers[j] < currentChannelNumbers[j])
 		{
 			for(var i=newChannelNumbers[j];i<currentChannelNumbers[j];i++)
 			{
-				disableChannel(currChCont, int2Str_2Chars(i+1), (j==5)?"dca":"ch");
+				disableChannel(currChCont, int2Str_2Chars(i+1), (j==4)?"dca":"ch");
 			}
 		}
 	}
@@ -125,7 +135,7 @@ function moduleValueChanged(value)
 		var chanCont = value.getParent().getParent().name;
 		var ptclPath = container2ptclPath(chanCont);
 
-		if((ptclPath != "") && (chanCont != "stereoInputChannels"))
+		if((ptclPath != "") && (chanCont != "stereoIns"))
 		{
 			// Get the channel number from the number of the container, "-1" to change to correct range for protocol
 			script.log(value.getParent().name);
@@ -144,7 +154,7 @@ function moduleValueChanged(value)
 			{
 				msg += "Fader/Level "+chanNum+" 0 "+dB2int(value.get());
 			}
-			else if((value.name == "pan") && (chanCont == "inputChannels"))
+			else if((value.name == "pan") && (chanCont == "monoIns"))
 			{
 				msg += "ToSt/Pan "+chanNum+" 0 "+value.get();
 			}
@@ -175,82 +185,79 @@ function dataReceived(data)
 	//								    /!\  Current/MuteMaster/On, so prefer use of "cmdPathSplit.length-x" instead of direct index
 	//										 0       1.         2. 
 
+	var msgRcvd = JSON.parse('{"category":"", "action": "", "target":"", "path":[], "params": {"x":0, "y":0, "z":0}, "strValue":""}');
 	var dataSplit = data.split(' ');
 
+	var i = 0;
 
-	if((dataSplit[0] == "NOTIFY") && (dataSplit[1] == "set"))
+	while( i < dataSplit.length)
 	{
-		// Store message to avoid infinite loop sending/receiving value
-		lastNotifyMsg = data.substring(7,data.length-dataSplit[6].length-1);
 
-		// Split path in data
-		var cmdPathSplit = dataSplit[2].split(':')[1].split('/');
-		
-		var destContainer = local.values.getChild(ptclPath2Container(cmdPathSplit[1]));
-		var dataExtractedValue = parseInt(dataSplit[5]);
+		msgRcvd['category'] = dataSplit[i];
 
-		var lastPathElement = cmdPathSplit[cmdPathSplit.length-1];
-		var secondLastPathElement = cmdPathSplit[cmdPathSplit.length-2];
-
-
-		if(((lastPathElement == "Level") || (lastPathElement == "On") || (lastPathElement == "Pan"))  && (cmdPathSplit[1] != "StIn"))
+		if((msgRcvd['category'] == "NOTIFY") || (msgRcvd['category'] == "OK"))
 		{
-			var chanNum = 0;
-			var rawChanNum = parseInt(dataSplit[3]);
+			msgRcvd['action'] = dataSplit[i+1];
 
-			if(cmdPathSplit[1] == "StInCh")
+			//Don't handle "OK set", to be checked when upgrade to support recalling libraries
+			if((msgRcvd['category'] == "NOTIFY") || ((msgRcvd['category'] == "OK") && (msgRcvd['action'] == "get")))
 			{
-				if((rawChanNum % 2) == 0)
+				var totalPathSplit = dataSplit[i+2].split(':');
+
+				msgRcvd['target'] = totalPathSplit[0];
+				msgRcvd['path'] = totalPathSplit[1].split('/');
+
+				msgRcvd['params']['x'] == dataSplit[i+3];
+
+				if((msgRcvd['action'] == "get") || (msgRcvd['action'] == "set"))
 				{
-					chanNum = (rawChanNum / 2) + 1;
+					msgRcvd['params']['y'] == dataSplit[i+4];
+					msgRcvd['params']['z'] == dataSplit[i+5];
+
+					msgRcvd['strValue'] == dataSplit[i+6];
+					i += 7;
 				}
 				else
 				{
-					return;
-				}
-			}
-			else
-			{
-				chanNum = rawChanNum + 1;
-			}
+					msgRcvd['params']['y'] == 0;
+					msgRcvd['params']['z'] == 0;
 
-			var destChannel = destContainer.getChild(int2Str_2Chars(chanNum));
+					msgRcvd['strValue'] == "";
+					i += 4;
+				}
 
-			if(secondLastPathElement == "Fader")
-			{
-				if(lastPathElement == "Level")
-				{
-					destChannel.level.set(int2dB(dataExtractedValue));
-				}
-				else if(lastPathElement == "On")
-				{
-					destChannel.on.set(dataExtractedValue);
-				}
-			}
-			else if((lastPathElement == "Pan") && (secondLastPathElement == "ToSt"))
-			{
-				destChannel.pan.set(dataExtractedValue);
-			}
-			else 
-			{
-				if(secondLastPathElement == "ToMix")
-				{
-
-				}
-				else if(secondLastPathElement == "ToMtrx")
-				{
-
-				}
+				processMsgRcvd(msgRcvd);
 			}
 		}
+		else if(msgRcvd['category'] == "ERROR")
+		{
+			script.logError("Received : "+data);
+			i = dataSplit.length;
+		}
+		else
+		{
+			// For debugging purposes...
+			script.logWarning("Received : "+data);
+			i = dataSplit.length;
+		}
+
 	}
-	else if(dataSplit[0] == "ERROR")
+
+}
+
+function processMsgRcvd(msg)
+{
+	var valueContainer = root.values;
+	var jsonCursor = pathToContainer;
+
+	var containerName = "";
+
+	for(var i=1;i<msg['path'].length;i++)
 	{
-		script.logError(data);
-	}
-	else
-	{
-		script.logWarning(data);
+		if(true)
+		{
+
+		}
 	}
 
 }
@@ -282,20 +289,11 @@ function int2Str_2Chars(number)
 	return (number < 10)?("0"+number):(""+number);
 }
 
-function ptclPath2Container(str)
-{
-	if(str == "InCh"){return "inputChannels";}
-	else if((str == "StInCh") || (str == "StIn")){return "stereoInputChannels";}
-	else if(str == "Mix"){return "mixOuts";}
-	else if(str == "Mtrx"){return "matrixOuts";}
-	else if(str == "DCA"){return "dCAs";}
-	else{return "";}
-}
 
 function container2ptclPath(str)
 {
-	if(str == "inputChannels"){return "InCh";}
-	else if(str == "stereoInputChannels"){return "StInCh";}
+	if(str == "monoIns"){return "InCh";}
+	else if(str == "stereoIns"){return "StInCh";}
 	else if(str == "mixOuts"){return "Mix";}
 	else if(str ==  "matrixOuts"){return "Mtrx";}
 	else if(str == "dCAs"){return "DCA";}
