@@ -1,6 +1,5 @@
 var debug = true;
-
-var lastNotifyMsg = "";
+var locked = false;
 
 // MonoIns, StIns, Mix, Matrix, DCA (MainOuts are always Stereo and Mono)
 var currentChannelNumbers = [72, 8, 24, 8, 16];
@@ -132,46 +131,48 @@ function disableChannel(container, name, type)
 // Sending new values to console
 function moduleValueChanged(value)
 {
-
-	if(value.isParameter())
+	//Lock mechanism to avoid resending message to the console when updte a value after receinving a "NOTIFY set" command
+	if(!locked)
 	{
-		var msg = "";
-		// If it's an input channel
-		var chanCont = value.getParent().getParent().name;
-		var ptclPath = container2ptclPath(chanCont);
-
-		if((ptclPath != "") && (chanCont != "stereoIns"))
+		if(value.isParameter())
 		{
-			// Get the channel number from the number of the container, "-1" to change to correct range for protocol
-			var chanNum = parseInt(value.getParent().name) - 1;
+			var msg = "";
+			// If it's an input channel
+			var chanCont = value.getParent().getParent().name;
+			var ptclPath = container2ptclPath(chanCont);
 
-			msg = "set MIXER:Current/"+ptclPath+"/";
+			if((ptclPath != "") && (chanCont != "stereoIns"))
+			{
+				// Get the channel number from the number of the container, "-1" to change to correct range for protocol
+				var chanNum = parseInt(value.getParent().name) - 1;
 
-			// If it's an on/off command	
-			if(value.name == "on")
-			{
-				msg += "Fader/On "+chanNum+" 0 "+value.get();
+				msg = "set MIXER:Current/"+ptclPath+"/";
+
+				// If it's an on/off command	
+				if(value.name == "on")
+				{
+					msg += "Fader/On "+chanNum+" 0 "+value.get();
+				}
+				// If it's a level command
+				else if(value.name == "level")
+				{
+					msg += "Fader/Level "+chanNum+" 0 "+dB2int(value.get());
+				}
+				else if((value.name == "pan") && (chanCont == "monoIns"))
+				{
+					msg += "ToSt/Pan "+chanNum+" 0 "+value.get();
+				}
+				else
+				{
+					msg = "";
+				}	
 			}
-			// If it's a level command
-			else if(value.name == "level")
+
+			if(msg != "")
 			{
-				msg += "Fader/Level "+chanNum+" 0 "+dB2int(value.get());
-			}
-			else if((value.name == "pan") && (chanCont == "monoIns"))
-			{
-				msg += "ToSt/Pan "+chanNum+" 0 "+value.get();
-			}
-			else
-			{
-				msg = "";
+				sendMessage(msg);
 			}	
 		}
-
-		// Avoid resending message to console after receiving a notification
-		if((msg != lastNotifyMsg) && (msg != "")) 
-		{
-			sendMessage(msg);
-		}	
 	}
 }
 
@@ -193,7 +194,7 @@ function dataReceived(data)
 		script.log(data);
 	}
 
-	var msgRcvd = JSON.parse('{"category":"", "action": "", "path":[], "params": {"x":0, "y":0, "z":0}, "strValue":""}');
+	var msgRcvd = JSON.parse('{"category": "", "action": "", "path": [], "params": {"x":0, "y":0, "z":0}, "strValue": ""}');
 	var dataSplit = data.split(' ');
 
 	var i = 0;
@@ -291,7 +292,9 @@ function processMsgRcvd(msg)
 		z = int2dB(z);
 	}
 
+	locked = true; 
 	valueContainer.getChild(targetValue).set(z);
+	locked = false;
 }
 
 function getValueCallback(command)
