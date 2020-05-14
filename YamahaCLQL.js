@@ -8,7 +8,7 @@ var channelContainerNames = ["monoIns", "stereoIns", "mixOuts", "matrixOuts", "d
 var descriptionPrefixes = ["In", "StIn", "Mix", "Matrix", "DCA", "St"];
 
 
-var pathToContainer = util.readFile("~/Documents/Chataigne/modules/Yamaha-CLQL-Chataigne-Module/pathToContainer.json", true);
+var pathToContainer = util.readFile("~/Documents/Chataigne/modules/Yamaha-CLQL-Chataigne-Module/pathToValue.json", true);
 
 
 
@@ -193,7 +193,7 @@ function dataReceived(data)
 		script.log(data);
 	}
 
-	var msgRcvd = JSON.parse('{"category":"", "action": "", "target":"", "path":[], "params": {"x":0, "y":0, "z":0}, "strValue":""}');
+	var msgRcvd = JSON.parse('{"category":"", "action": "", "path":[], "params": {"x":0, "y":0, "z":0}, "strValue":""}');
 	var dataSplit = data.split(' ');
 
 	var i = 0;
@@ -210,10 +210,14 @@ function dataReceived(data)
 			//Don't handle "OK set", to be checked when upgrade to support recalling libraries
 			if((msgRcvd['category'] == "NOTIFY") || ((msgRcvd['category'] == "OK") && (msgRcvd['action'] == "get")))
 			{
-				var totalPathSplit = dataSplit[i+2].split(':');
+				var pathSplit = dataSplit[i+2].split(':');
+				var endPathSplit = pathSplit[1].split('/');
 
-				msgRcvd['target'] = totalPathSplit[0];
-				msgRcvd['path'] = totalPathSplit[1].split('/');
+				msgRcvd['path'].push(pathSplit[0]);
+				for(var j=0;j<endPathSplit.length;j++)
+				{
+					msgRcvd['path'].push(endPathSplit[j]);
+				}
 
 				msgRcvd['params']['x'] = parseInt(dataSplit[i+3]);
 
@@ -260,7 +264,7 @@ function processMsgRcvd(msg)
 
 	var msgLength = msg['path'].length;
 
-	for(var i=1;i<msgLength-1;i++)
+	for(var i=0;i<msgLength-1;i++)
 	{
 		jsonCursor = jsonCursor[msg['path'][i]];
 		var containerName = jsonCursor['container'];
@@ -268,13 +272,13 @@ function processMsgRcvd(msg)
 		if(containerName != undefined)
 		{
 			valueContainer = valueContainer.getChild(containerName);
-			if(debug){script.log(valueContainer.getControlAddress());}
+			//if(debug){script.log(valueContainer.getControlAddress());}
 
 			var index = jsonCursor['indexContainer'];
 			if(index != undefined)
 			{
 				valueContainer = valueContainer.getChild(int2Str_2Chars((msg['params'][index]+1)));
-				if(debug){script.log(valueContainer.getControlAddress());}
+				//if(debug){script.log(valueContainer.getControlAddress());}
 			}
 		}
 	}
