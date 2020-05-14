@@ -6,7 +6,7 @@
 			"InCh":
 			{
 				"container":"monoIns",
-				"indexContainer":"x",
+				"index":"x",
 				"Fader":
 				{
 					"values":
@@ -25,7 +25,7 @@
 				"ToMix":
 				{
 					"container":"mixSends",
-					"indexContainer":"y",
+					"index":"y",
 					"values":
 					[
 						"on",
@@ -37,7 +37,7 @@
 				"ToMtrx":
 				{
 					"container":"matrixSends",
-					"indexContainer":"y",
+					"index":"y",
 					"values":
 					[
 						"on",
@@ -50,7 +50,7 @@
 			"StIn":
 			{
 				"container":"stereoIns",
-				"indexContainer":"x",
+				"index":"x",
 				"Fader":
 				{
 					"values":
@@ -69,7 +69,7 @@
 				"ToMix":
 				{
 					"container":"mixSends",
-					"indexContainer":"y",
+					"index":"y",
 					"values":
 					[
 						"on",
@@ -81,7 +81,7 @@
 				"ToMtrx":
 				{
 					"container":"matrixSends",
-					"indexContainer":"y",
+					"index":"y",
 					"values":
 					[
 						"on",
@@ -94,7 +94,7 @@
 			"Mix":
 			{
 				"container":"mixOuts",
-				"indexContainer":"x",
+				"index":"x",
 				"Fader":
 				{
 					"values":
@@ -113,7 +113,7 @@
 				"ToMtrx":
 				{
 					"container":"matrixSends",
-					"indexContainer":"y",
+					"index":"y",
 					"values":
 					[
 						"on",
@@ -134,7 +134,7 @@
 			"Mtrx":
 			{
 				"container":"matrixOuts",
-				"indexContainer":"x",
+				"index":"x",
 				"Fader":
 				{
 					"values":
@@ -155,7 +155,7 @@
 			"DCA":
 			{
 				"container":"dCAs",
-				"indexContainer":"x",
+				"index":"x",
 				"Fader":
 				{
 					"values":
@@ -168,7 +168,7 @@
 			"St":
 			{
 				"container":"masterOuts",
-				"indexContainer":"x",
+				"index":"x",
 				"Fader":
 				{
 					"values":
@@ -180,7 +180,7 @@
 				"ToMtrx":
 				{
 					"container":"matrixSends",
-					"indexContainer":"y",
+					"index":"y",
 					"values":
 					[
 						"on",

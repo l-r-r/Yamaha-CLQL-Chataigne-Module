@@ -1,0 +1,52 @@
+{
+	"CL1":
+	{
+		"Type":"CL",
+		"Mono Ins":56,
+		"Stereo Ins":8,
+		"Mix Outs":24,
+		"Matrix Outs":8,
+		"DCAs":16,
+		"Mutes":8
+	},
+	"CL3":
+	{
+		"Type":"CL",
+		"Mono Ins":64,
+		"Stereo Ins":8,
+		"Mix Outs":16,
+		"Matrix Outs":8,
+		"DCAs":16,
+		"Mutes":8
+	},
+	"CL5":
+	{
+		"Type":"CL",
+		"Mono Ins":64,
+		"Stereo Ins":8,
+		"Mix Outs":16,
+		"Matrix Outs":8,
+		"DCAs":16,
+		"Mutes":8
+	},
+	"QL1":
+	{
+		"Type":"QL",
+		"Mono Ins":32,
+		"Stereo Ins":8,
+		"Mix Outs":16,
+		"Matrix Outs":8,
+		"DCAs":16,
+		"Mutes":8
+	},
+	"QL5":
+	{
+		"Type":"QL",
+		"Mono Ins":64,
+		"Stereo Ins":8,
+		"Mix Outs":16,
+		"Matrix Outs":8,
+		"DCAs":16,
+		"Mutes":8
+	},
+}

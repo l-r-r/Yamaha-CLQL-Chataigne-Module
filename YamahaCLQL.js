@@ -7,7 +7,7 @@ var channelContainerNames = ["monoIns", "stereoIns", "mixOuts", "matrixOuts", "d
 var descriptionPrefixes = ["In", "StIn", "Mix", "Matrix", "DCA", "St"];
 
 
-var pathToContainer = util.readFile("~/Documents/Chataigne/modules/Yamaha-CLQL-Chataigne-Module/pathToValue.json", true);
+var pathToValue = util.readFile("~/Documents/Chataigne/modules/Yamaha-CLQL-Chataigne-Module/pathToValue.json", true);
 
 
 
@@ -261,7 +261,7 @@ function dataReceived(data)
 function processMsgRcvd(msg)
 {
 	var valueContainer = local.values;
-	var jsonCursor = pathToContainer;
+	var jsonCursor = pathToValue;
 
 	var msgLength = msg['path'].length;
 
@@ -275,7 +275,7 @@ function processMsgRcvd(msg)
 			valueContainer = valueContainer.getChild(containerName);
 			//if(debug){script.log(valueContainer.getControlAddress());}
 
-			var index = jsonCursor['indexContainer'];
+			var index = jsonCursor['index'];
 			if(index != undefined)
 			{
 				valueContainer = valueContainer.getChild(int2Str_2Chars((msg['params'][index]+1)));
