@@ -1,275 +1,280 @@
 {
 	"On":
 	{
-		"path":"MIXER:Current",
+		"pathroot":"MIXER:Current/",
 		"monoIns":
 		{
-			"path":"InCh/Fader",
+			"path":"InCh/Fader/",
 			"index":"x"
 		},
 		"stereoIns":
 		{
-			"path":"StIn/Fader",
+			"path":"StIn/Fader/",
 			"index":"x"
 		},
 		"mixOuts":
 		{
-			"path":"Mix/Fader",
+			"path":"Mix/Fader/",
 			"index":"x"
 		},
 		"matrixOuts":
 		{
-			"path":"Mtrx/Fader",
+			"path":"Mtrx/Fader/",
 			"index":"x"
 		},
 		"dCAs":
 		{
-			"path":"DCA/Fader",
+			"path":"DCA/Fader/",
 			"index":"x"
 		},
 		"masterOuts":
 		{
-			"path":"St/Fader",
+			"path":"St/Fader/",
 			"index":"x"
 		},
 		"mixSends":
 		{
-			"path":"ToMix",
+			"path":"ToMix/",
 			"index":"y",
 			"monoIns":
 			{
-				"path":"InCh",
+				"path":"InCh/",
 				"index":"x"
 			},
 			"stereoIns":
 			{
-				"path":"StIn",
+				"path":"StIn/",
 				"index":"x"
 			}
 		},
 		"matrixSends":
 		{
-			"path":"ToMtrx",
+			"path":"ToMtrx/",
 			"index":"y",
 			"monoIns":
 			{
-				"path":"InCh",
+				"path":"InCh/",
 				"index":"x"
 			},
 			"stereoIns":
 			{
-				"path":"StIn",
+				"path":"StIn/",
 				"index":"x"
 			},
 			"mixOuts":
 			{
-				"path":"Mix",
+				"path":"Mix/",
 				"index":"x"
 			},
 			"masterOuts":
 			{
-				"path":"St",
+				"path":"St/",
 				"index":"x"
 			}
+		},
+		"muteMasters":
+		{
+			"path":"MuteMaster/",
+			"index":"x"
 		}
 	},
 	"Level":
 	{
-		"path":"MIXER:Current",
+		"pathroot":"MIXER:Current/",
 		"monoIns":
 		{
-			"path":"InCh/Fader",
+			"path":"InCh/Fader/",
 			"index":"x"
 		},
 		"stereoIns":
 		{
-			"path":"StIn/Fader",
+			"path":"StIn/Fader/",
 			"index":"x"
 		},
 		"mixOuts":
 		{
-			"path":"Mix/Fader",
+			"path":"Mix/Fader/",
 			"index":"x"
 		},
 		"matrixOuts":
 		{
-			"path":"Mtrx/Fader",
+			"path":"Mtrx/Fader/",
 			"index":"x"
 		},
 		"dCAs":
 		{
-			"path":"DCA/Fader",
+			"path":"DCA/Fader/",
 			"index":"x"
 		},
 		"masterOuts":
 		{
-			"path":"St/Fader",
+			"path":"St/Fader/",
 			"index":"x"
 		},
 		"mixSends":
 		{
-			"path":"ToMix",
+			"path":"ToMix/",
 			"index":"y",
 			"monoIns":
 			{
-				"path":"InCh",
+				"path":"InCh/",
 				"index":"x"
 			},
 			"stereoIns":
 			{
-				"path":"StIn",
+				"path":"StIn/",
 				"index":"x"
 			}
 		},
 		"matrixSends":
 		{
-			"path":"ToMtrx",
+			"path":"ToMtrx/",
 			"index":"y",
 			"monoIns":
 			{
-				"path":"InCh",
+				"path":"InCh/",
 				"index":"x"
 			},
 			"stereoIns":
 			{
-				"path":"StIn",
+				"path":"StIn/",
 				"index":"x"
 			},
 			"mixOuts":
 			{
-				"path":"Mix",
+				"path":"Mix/",
 				"index":"x"
 			},
 			"masterOuts":
 			{
-				"path":"St",
+				"path":"St/",
 				"index":"x"
 			}
 		}
 	},
 	"Pan":
 	{
-		"path":"MIXER:Current",
+		"pathroot":"MIXER:Current/",
 		"monoIns":
 		{
-			"path":"InCh/ToSt",
+			"path":"InCh/ToSt/",
 			"index":"x"
 		},
 		"stereoIns":
 		{
-			"path":"StIn/ToSt",
+			"path":"StIn/ToSt/",
 			"index":"x"
 		},
 		"mixOuts":
 		{
-			"path":"Mix/ToSt",
+			"path":"Mix/ToSt/",
 			"index":"x"
 		},
 		"mixSends":
 		{
-			"path":"ToMix",
+			"path":"ToMix/",
 			"index":"y",
 			"monoIns":
 			{
-				"path":"InCh",
+				"path":"InCh/",
 				"index":"x"
 			},
 			"stereoIns":
 			{
-				"path":"StIn",
+				"path":"StIn/",
 				"index":"x"
 			}
 		},
 		"matrixSends":
 		{
-			"path":"ToMtrx",
+			"path":"ToMtrx/",
 			"index":"y",
 			"monoIns":
 			{
-				"path":"InCh",
+				"path":"InCh/",
 				"index":"x"
 			},
 			"stereoIns":
 			{
-				"path":"StIn",
+				"path":"StIn/",
 				"index":"x"
 			},
 			"mixOuts":
 			{
-				"path":"Mix",
+				"path":"Mix/",
 				"index":"x"
 			},
 			"masterOuts":
 			{
-				"path":"St",
+				"path":"St/",
 				"index":"x"
 			}
 		}
 	},
 	"Balance":
 	{
-		"path":"MIXER:Current",
+		"pathroot":"MIXER:Current/",
 		"stereoIns":
 		{
-			"path":"StIn/ToSt",
+			"path":"StIn/ToSt/",
 			"index":"x"
 		},
 		"mixOuts":
 		{
-			"path":"Mix/Out",
+			"path":"Mix/Out/",
 			"index":"x"
 		},
 		"matrixOuts":
 		{
-			"path":"Mtrx/Out",
+			"path":"Mtrx/Out/",
 			"index":"x"
 		},
 		"masterOuts":
 		{
-			"path":"St/Out",
+			"path":"St/Out/",
 			"index":"x"
 		},
 	},
 	"PrePost":
 	{
-		"path":"MIXER:Current",
+		"pathroot":"MIXER:Current/",
 		"mixSends":
 		{
-			"path":"ToMix",
+			"path":"ToMix/",
 			"index":"y",
 			"monoIns":
 			{
-				"path":"InCh",
+				"path":"InCh/",
 				"index":"x"
 			},
 			"stereoIns":
 			{
-				"path":"StIn",
+				"path":"StIn/",
 				"index":"x"
 			}
 		},
 		"matrixSends":
 		{
-			"path":"ToMtrx",
+			"path":"ToMtrx/",
 			"index":"y",
 			"monoIns":
 			{
-				"path":"InCh",
+				"path":"InCh/",
 				"index":"x"
 			},
 			"stereoIns":
 			{
-				"path":"StIn",
+				"path":"StIn/",
 				"index":"x"
 			},
 			"mixOuts":
 			{
-				"path":"Mix",
+				"path":"Mix/",
 				"index":"x"
 			},
 			"masterOuts":
 			{
-				"path":"St",
+				"path":"St/",
 				"index":"x"
 			}
 		}

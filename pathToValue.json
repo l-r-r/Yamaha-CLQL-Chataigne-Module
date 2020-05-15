@@ -197,6 +197,15 @@
 						"balance"
 					]
 				}
+			},
+			"MuteMaster":
+			{
+				"container":"muteMasters",
+				"index":"x",
+				"values":
+				[
+					"on"
+				]
 			}
 		}
 	}

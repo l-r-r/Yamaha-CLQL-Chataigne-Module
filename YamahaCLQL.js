@@ -8,6 +8,7 @@ var descriptionPrefixes = ["In", "StIn", "Mix", "Matrix", "DCA", "St"];
 
 
 var pathToValue = util.readFile("~/Documents/Chataigne/modules/Yamaha-CLQL-Chataigne-Module/pathToValue.json", true);
+var valueToPath = util.readFile("~/Documents/Chataigne/modules/Yamaha-CLQL-Chataigne-Module/valueToPath.json", true);
 
 
 
@@ -34,8 +35,8 @@ function init()
 	}
 
 
-
 	// TESTING ZONE
+
 }
 
 
@@ -114,6 +115,7 @@ function enableChannel(container, name, type)
 	}
 }
 
+
 function disableChannel(container, name, type)
 {
 	var ch = container.getChild(name);
@@ -131,47 +133,53 @@ function disableChannel(container, name, type)
 // Sending new values to console
 function moduleValueChanged(value)
 {
-	//Lock mechanism to avoid resending message to the console when updte a value after receinving a "NOTIFY set" command
-	if(!locked)
+	if(value.isParameter())
 	{
-		if(value.isParameter())
-		{
-			var msg = "";
-			// If it's an input channel
-			var chanCont = value.getParent().getParent().name;
-			var ptclPath = container2ptclPath(chanCont);
+		// Lock mechanism to avoid resending message to the console when updte a value after receinving a "NOTIFY set" command
+		if(!locked)
+		{	
+			var msg = "set ";
+			var path = "";
 
-			if((ptclPath != "") && (chanCont != "stereoIns"))
+			var z = value.get();
+
+			var targetCh = JSON.parse('{ "x":0, "y":0 }');
+
+			var jsonCursor = valueToPath[value.niceName];
+			var pathroot = jsonCursor['pathroot'];
+
+			var parent = value.getParent();
+			var indexNum = 0;
+
+			while(parent.name != 'values')
 			{
-				// Get the channel number from the number of the container, "-1" to change to correct range for protocol
-				var chanNum = parseInt(value.getParent().name) - 1;
+				indexNum = parseInt(parent.name);
 
-				msg = "set MIXER:Current/"+ptclPath+"/";
+				if(indexNum)
+				{
+					parent = parent.getParent();
+					jsonCursor = jsonCursor[ parent.name ];
+					targetCh[ jsonCursor['index'] ] = (indexNum-1);
+					path = jsonCursor['path']+path;
+				}
 
-				// If it's an on/off command	
-				if(value.name == "on")
-				{
-					msg += "Fader/On "+chanNum+" 0 "+value.get();
-				}
-				// If it's a level command
-				else if(value.name == "level")
-				{
-					msg += "Fader/Level "+chanNum+" 0 "+dB2int(value.get());
-				}
-				else if((value.name == "pan") && (chanCont == "monoIns"))
-				{
-					msg += "ToSt/Pan "+chanNum+" 0 "+value.get();
-				}
-				else
-				{
-					msg = "";
-				}	
+				parent = parent.getParent();
+				
 			}
 
-			if(msg != "")
+			msg += pathroot+path+value.niceName;
+
+			msg += " "+targetCh['x'];
+			msg += " "+targetCh['y'];
+
+			if(value.niceName == "Level")
 			{
-				sendMessage(msg);
-			}	
+				z = dB2int(z);
+			} 
+
+			msg += " "+z;
+
+			sendMessage(msg);
 		}
 	}
 }
@@ -253,10 +261,9 @@ function dataReceived(data)
 			script.logWarning("Received : "+data);
 			i = dataSplit.length;
 		}
-
 	}
-
 }
+
 
 function processMsgRcvd(msg)
 {
@@ -297,6 +304,7 @@ function processMsgRcvd(msg)
 	locked = false;
 }
 
+
 function getValueCallback(command)
 {
 	sendMessage("get "+command);
@@ -306,6 +314,7 @@ function setValueCallback(command)
 {
 	sendMessage("set "+command);
 }
+
 
 // TODO : Implement conversion between protocol values and real values
 function int2dB(i)
@@ -318,21 +327,11 @@ function dB2int(i)
 	return i;
 }
 
+
 // Return a 2-characters string from an integer (0-99)
 function int2Str_2Chars(number)
 {
 	return (number < 10)?("0"+number):(""+number);
-}
-
-
-function container2ptclPath(str)
-{
-	if(str == "monoIns"){return "InCh";}
-	else if(str == "stereoIns"){return "StInCh";}
-	else if(str == "mixOuts"){return "Mix";}
-	else if(str ==  "matrixOuts"){return "Mtrx";}
-	else if(str == "dCAs"){return "DCA";}
-	else{return "";}
 }
 
 

@@ -14,7 +14,7 @@
 		"Type":"CL",
 		"Mono Ins":64,
 		"Stereo Ins":8,
-		"Mix Outs":16,
+		"Mix Outs":24,
 		"Matrix Outs":8,
 		"DCAs":16,
 		"Mutes":8
@@ -22,9 +22,9 @@
 	"CL5":
 	{
 		"Type":"CL",
-		"Mono Ins":64,
+		"Mono Ins":72,
 		"Stereo Ins":8,
-		"Mix Outs":16,
+		"Mix Outs":24,
 		"Matrix Outs":8,
 		"DCAs":16,
 		"Mutes":8
