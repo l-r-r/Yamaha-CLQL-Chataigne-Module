@@ -33,11 +33,11 @@
 			"options":
 			{
 				"Please select...":"none",
-				"CL1":"cl1",
-				"CL3":"cl3",
-				"CL5":"cl5",
-				"QL1":"ql1",
-				"QL5":"ql5"
+				"CL1":"CL1",
+				"CL3":"CL3",
+				"CL5":"CL5",
+				"QL1":"QL1",
+				"QL5":"QL5"
 			}
 		}
 	},

@@ -58,7 +58,7 @@ function moduleParameterChanged(param)
 	{
 		if(param.name == "model")
 		{
-			rebuildConsole(param.getData());
+			rebuildConsole(param.get());
 		}
 	}
 }
@@ -70,11 +70,11 @@ function rebuildConsole(model)
 	var newChannelNumbers  = [0, 0, 0, 0, 0];
 
 	// If "none", array stay null, and all the channel parameters 
-	if( model =="cl1" ){ newChannelNumbers = [56, 8, 24, 8, 16]; }
-	else if( model =="cl3" ){ newChannelNumbers = [64, 8, 24, 8, 16]; }
-	else if( model =="cl5" ){ newChannelNumbers = [72, 8, 24, 8, 16]; }
-	else if( model =="ql1" ){ newChannelNumbers = [32, 8, 16, 8, 8]; }
-	else if( model =="ql5" ){ newChannelNumbers = [64, 8, 16, 8, 8]; }
+	if( model =="CL1" ){ newChannelNumbers = [56, 8, 24, 8, 16]; }
+	else if( model =="CL3" ){ newChannelNumbers = [64, 8, 24, 8, 16]; }
+	else if( model =="CL5" ){ newChannelNumbers = [72, 8, 24, 8, 16]; }
+	else if( model =="QL1" ){ newChannelNumbers = [32, 8, 16, 8, 8]; }
+	else if( model =="QL5" ){ newChannelNumbers = [64, 8, 16, 8, 8]; }
 
 
 	for(var j=0;j<5;j++)
@@ -153,7 +153,7 @@ function moduleValueChanged(value)
 
 			while(parent.name != 'values')
 			{
-				indexNum = parseInt(parent.name);
+				indexNum = parseInt(parent.name, true);
 
 				if(indexNum)
 				{
@@ -228,12 +228,12 @@ function dataReceived(data)
 					msgRcvd['path'].push(endPathSplit[j]);
 				}
 
-				msgRcvd['params']['x'] = parseInt(dataSplit[i+3]);
+				msgRcvd['params']['x'] = parseInt(dataSplit[i+3], true);
 
 				if((msgRcvd['action'] == "get") || (msgRcvd['action'] == "set"))
 				{
-					msgRcvd['params']['y'] = parseInt(dataSplit[i+4]);
-					msgRcvd['params']['z'] =parseInt(dataSplit[i+5]);
+					msgRcvd['params']['y'] = parseInt(dataSplit[i+4], true);
+					msgRcvd['params']['z'] =parseInt(dataSplit[i+5], true);
 
 					msgRcvd['strValue'] = dataSplit[i+6];
 					i += 7;
