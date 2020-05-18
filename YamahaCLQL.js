@@ -7,8 +7,10 @@ var channelContainerNames = ["monoIns", "stereoIns", "mixOuts", "matrixOuts", "d
 var descriptionPrefixes = ["In", "StIn", "Mix", "Matrix", "DCA", "St"];
 
 
-var pathToValue = util.readFile("~/Documents/Chataigne/modules/Yamaha-CLQL-Chataigne-Module/pathToValue.json", true);
-var valueToPath = util.readFile("~/Documents/Chataigne/modules/Yamaha-CLQL-Chataigne-Module/valueToPath.json", true);
+var pathToValue = util.readFile("pathToValue.json", true, true);
+var valueToPath = util.readFile("valueToPath.json", true, true);
+
+var currentModel;
 
 
 
@@ -34,7 +36,8 @@ function init()
 		}
 	}
 
-
+	var models = util.readFile("models.json", true, true);
+	currentModel = models[local.parameters.model.get()];
 	// TESTING ZONE
 
 }
@@ -63,6 +66,20 @@ function moduleParameterChanged(param)
 	}
 }
 
+function buildConsole(model)
+{
+	var models = util.readFile("models.json", true, true);
+	var jsonModel = models[model];
+
+
+
+}
+
+
+function syncConsole()
+{
+
+}
 
 function rebuildConsole(model)
 {
@@ -258,7 +275,10 @@ function dataReceived(data)
 		else
 		{
 			// For debugging purposes...
+			if(debug)
+			{
 			script.logWarning("Received : "+data);
+			}
 			i = dataSplit.length;
 		}
 	}
