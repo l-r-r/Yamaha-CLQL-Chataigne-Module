@@ -1,57 +1,28 @@
 var debug = true;
 var locked = false;
 
-// MonoIns, StIns, Mix, Matrix, DCA (MainOuts are always Stereo and Mono)
-var currentChannelNumbers = [72, 8, 24, 8, 16];
-var channelContainerNames = ["monoIns", "stereoIns", "mixOuts", "matrixOuts", "dCAs", "masterOuts"];
-var descriptionPrefixes = ["In", "StIn", "Mix", "Matrix", "DCA", "St"];
+
+var chContainerNames = ["monoIns", "stereoIns", "mixOuts", "matrixOuts", "dCAs", "muteGroups"];
+var descriptionPrefixes = ["In", "StIn", "Mix", "Matrix", "DCA", "Mute"];
+
+var currentModel;
 
 
 var pathToValue = util.readFile("pathToValue.json", true, true);
 var valueToPath = util.readFile("valueToPath.json", true, true);
 
-var currentModel;
-
 
 
 function init()
 {
-	createChannel(local.values.getChild("masterOuts"), "Stereo", "st", "");
-	createChannel(local.values.getChild("masterOuts"), "Mono", "mono", "");
-
-	var chType = "";
-
-	for(var j=0;j<5;j++)
-	{
-		var currChCont = local.values.getChild(channelContainerNames[j]);
-
-		chType = (j==4)?"dca":"ch";
-
-		for(var i=0;i<currentChannelNumbers[j];i++)
-		{
-			createChannel(currChCont, int2Str_2Chars(i+1), chType, descriptionPrefixes[j]);
-
-			// Disabling all the channels at the creation of the module to force to choose a model
-			//disableChannel(currChCont, int2Str_2Chars(i+1), (j==5)?"dca":"ch");
-		}
-	}
-
 	var models = util.readFile("models.json", true, true);
-	currentModel = models[local.parameters.model.get()];
+	var currentModelName = local.parameters.model.get();
+
+	currentModel = models[currentModelName];
+	buildConsole(currentModelName);
+
 	// TESTING ZONE
 
-}
-
-
-function createChannel(container, name, type, descriptionPrefix)
-{
-	var newCh = container.addContainer(name);
-	newCh.addBoolParameter("On", descriptionPrefix+name+"'s mute", true);
-	if(type!="dca" && type!="mono")
-	{ 
-		newCh.addIntParameter("Pan", descriptionPrefix+name+"'s pan", 0, -63, 63);
-	}
-	newCh.addIntParameter("Level", descriptionPrefix+name+"'s level", 0, -32768, 1000);
 }
 
 
@@ -61,17 +32,201 @@ function moduleParameterChanged(param)
 	{
 		if(param.name == "model")
 		{
-			rebuildConsole(param.get());
+			buildConsole(param.get());
 		}
 	}
 }
 
-function buildConsole(model)
+
+function buildConsole(newModelName)
 {
 	var models = util.readFile("models.json", true, true);
-	var jsonModel = models[model];
+	var newModel = models[newModelName];
+
+	var currentModelChCount;
+	var newModelChCount;
+
+	var chContainer;
+	var newCh;
+	var newChIndexStr;
+
+	var chSendsContainer;
+	var newSendContainer;
+	var newSendIndexStr;
+
+	// test if a console was already built or not
+	// send an exception in the log if not, so maybe there is a better solution to find :)
+	var firstBuild = (local.values.monoIns.getChild("01") == undefined);
+
+	if(firstBuild)
+	{
+		//Build Stereo master
+		newCh = local.values.masterOuts.addContainer("Stereo");
+		newCh.addBoolParameter("On", "Stereo master's on", true);
+		newCh.addIntParameter("Balance", "Stereo master's balance", 0, -63, 63);
+		newCh.addIntParameter("Level", "Stereo master's level", 0, -32768, 1000);
+
+		chSendsContainer = newCh.addContainer("Matrix Sends");
+		chSendsContainer.setCollapsed(true);
+
+		for(var k=0;k<newModel["matrixOuts"];k++)
+		{
+			newSendIndexStr = int2Str_2Chars(k+1);
+			newSendContainer = chSendsContainer.addContainer(newSendIndexStr);
+			newSendContainer.setCollapsed(true);
+
+			newSendContainer.addBoolParameter("On", "Stereo master's send to Matrix "+newSendIndexStr+"'s on", true);
+			newSendContainer.addBoolParameter("PrePost", "Stereo master's send to Matrix "+newSendIndexStr+"'s pre/post", true);
+			newSendContainer.addIntParameter("Pan", "Stereo master''s send to Matrix "+newSendIndexStr+"'s pan", 0, -63, 63);
+			newSendContainer.addIntParameter("Level", "Stereo master's send to Matrix "+newSendIndexStr+"'s level", 0, -32768, 1000);
+		}
+
+		//Build Mono master
+		newCh = local.values.masterOuts.addContainer("Mono");
+		newCh.addBoolParameter("On", "Mono master's on", true);
+		newCh.addIntParameter("Level", "Mono master's level", 0, -32768, 1000);
+
+		chSendsContainer = newCh.addContainer("Matrix Sends");
+		chSendsContainer.setCollapsed(true);
+
+		for(var k=0;k<newModel["matrixOuts"];k++)
+		{
+			newSendIndexStr = int2Str_2Chars(k+1);
+			newSendContainer = chSendsContainer.addContainer(newSendIndexStr);
+			newSendContainer.setCollapsed(true);
+
+			newSendContainer.addBoolParameter("On", "Mono master's send to Matrix "+newSendIndexStr+"'s on", true);
+			newSendContainer.addBoolParameter("PrePost", "Mono master's send to Matrix "+newSendIndexStr+"'s pre/post", true);
+			newSendContainer.addIntParameter("Pan", "Mono master''s send to Matrix "+newSendIndexStr+"'s pan", 0, -63, 63);
+			newSendContainer.addIntParameter("Level", "Mono master's send to Matrix "+newSendIndexStr+"'s level", 0, -32768, 1000);
+		}
+
+	}
 
 
+	for(var i=0;i<6;i++)
+	{
+		currentModelChCount = (firstBuild)?0:currentModel[chContainerNames[i]];
+		newModelChCount = newModel[chContainerNames[i]];
+
+		chContainer = local.values.getChild(chContainerNames[i]);
+		//script.log(chContainerNames[i]);
+		//script.log(" "+newModelChCount+" "+currentModelChCount);
+		
+		if(newModelChCount > currentModelChCount)
+		{
+
+			for(var j=currentModelChCount;j<newModelChCount;j++)
+			{
+				newChIndexStr = int2Str_2Chars(j+1);
+				newCh = chContainer.addContainer(newChIndexStr);
+
+				newCh.addBoolParameter("On", descriptionPrefixes[i]+newChIndexStr+"'s on", true);
+
+				if((chContainerNames[i] == "monoIns") || (chContainerNames[i] == "stereoIns") || (chContainerNames[i] == "mixOuts"))
+				{
+					newCh.addIntParameter("Pan", descriptionPrefixes[i]+newChIndexStr+"'s pan", 0, -63, 63);
+				}
+
+				if((chContainerNames[i] == "stereoIns") || (chContainerNames[i] == "mixOuts") || (chContainerNames[i] == "matrixOuts"))
+				{
+					newCh.addIntParameter("Balance", descriptionPrefixes[i]+newChIndexStr+"'s balance", 0, -63, 63);
+				}
+
+				if(chContainerNames[i] != "muteGroups")
+				{
+					newCh.addIntParameter("Level", descriptionPrefixes[i]+newChIndexStr+"'s level", 0, -32768, 1000);
+				}
+
+				if((chContainerNames[i] == "monoIns") || (chContainerNames[i] == "stereoIns"))
+				{
+					chSendsContainer = newCh.addContainer("Mix Sends");
+					chSendsContainer.setCollapsed(true);
+
+					for(var k=0;k<newModel["mixOuts"];k++)
+					{
+						newSendIndexStr = int2Str_2Chars(k+1);
+						newSendContainer = chSendsContainer.addContainer(newSendIndexStr);
+						newSendContainer.setCollapsed(true);
+
+						newSendContainer.addBoolParameter("On", descriptionPrefixes[i]+newChIndexStr+"'s send to Mix "+newSendIndexStr+"'s on", true);
+						newSendContainer.addBoolParameter("PrePost", descriptionPrefixes[i]+newChIndexStr+"'s send to Mix "+newSendIndexStr+"'s pre/post", true);
+						newSendContainer.addIntParameter("Pan", descriptionPrefixes[i]+newChIndexStr+"'s send to Mix "+newSendIndexStr+"'s pan", 0, -63, 63);
+						newSendContainer.addIntParameter("Level", descriptionPrefixes[i]+newChIndexStr+"'s send to Mix "+newSendIndexStr+"'s level", 0, -32768, 1000);
+					}
+				}
+
+				if((chContainerNames[i] == "monoIns") || (chContainerNames[i] == "stereoIns") || (chContainerNames[i] == "mixOuts"))
+				{
+					chSendsContainer = newCh.addContainer("Matrix Sends");
+					chSendsContainer.setCollapsed(true);
+
+					for(var k=0;k<newModel["matrixOuts"];k++)
+					{
+						newSendIndexStr = int2Str_2Chars(k+1);
+						newSendContainer = chSendsContainer.addContainer(newSendIndexStr);
+						newSendContainer.setCollapsed(true);
+
+						newSendContainer.addBoolParameter("On", descriptionPrefixes[i]+newChIndexStr+"'s send to Matrix "+newSendIndexStr+"'s on", true);
+						newSendContainer.addBoolParameter("PrePost", descriptionPrefixes[i]+newChIndexStr+"'s send to Matrix "+newSendIndexStr+"'s pre/post", true);
+						newSendContainer.addIntParameter("Pan", descriptionPrefixes[i]+newChIndexStr+"'s send to Matrix "+newSendIndexStr+"'s pan", 0, -63, 63);
+						newSendContainer.addIntParameter("Level", descriptionPrefixes[i]+newChIndexStr+"'s send to Matrix "+newSendIndexStr+"'s level", 0, -32768, 1000);
+					}
+				}
+			}
+
+			// If mix count increases, we add relevant mix sends to pre-existing mono and stereo input channels
+			if(chContainerNames[i] == "mixOuts")
+			{
+				for(var n=0;n<2;n++)
+				{
+					for(var j=0;j<currentModel[chContainerNames[n]];j++)
+					{
+						for(var k=currentModelChCount;k<newModelChCount;k++)
+						{
+							newSendIndexStr = int2Str_2Chars(k+1);
+							newSendContainer = local.values.monoIns.getChild(int2Str_2Chars(j+1)).getChild("mixSends").addContainer(int2Str_2Chars(k+1));
+							newSendContainer.setCollapsed(true);
+
+							newSendContainer.addBoolParameter("On", descriptionPrefixes[n]+int2Str_2Chars(j+1)+"'s send to Mix "+newSendIndexStr+"'s on", true);
+							newSendContainer.addBoolParameter("PrePost", descriptionPrefixes[n]+int2Str_2Chars(j+1)+"'s send to Mix "+newSendIndexStr+"'s pre/post", true);
+							newSendContainer.addIntParameter("Pan", descriptionPrefixes[n]+int2Str_2Chars(j+1)+"'s send to Mix "+newSendIndexStr+"'s pan", 0, -63, 63);
+							newSendContainer.addIntParameter("Level", descriptionPrefixes[n]+int2Str_2Chars(j+1)+"'s send to Mix "+newSendIndexStr+"'s level", 0, -32768, 1000);
+						}
+					}
+				}
+			}
+
+		}
+		else if(newModelChCount < currentModelChCount)
+		{
+			for(var j=newModelChCount;j<currentModelChCount;j++)
+			{
+				chContainer.removeContainer(int2Str_2Chars(j+1));
+			}
+		}
+	}
+
+	//Deleting unnecessary mix sends previously created if mixOuts decreases
+	if(newModel["mixOuts"] < currentModel["mixOuts"])
+	{
+		for(var j=newModel["mixOuts"];j<currentModel["mixOuts"];j++)
+		{
+			script.log(" "+newModel["monoIns"]+" "+j);
+			for(var k=0;k<newModel["monoIns"];k++)
+			{
+				var chCont = local.values.monoIns.getChild(int2Str_2Chars(k+1));
+				chCont.mixSends.removeContainer(int2Str_2Chars(j+1));
+			}
+			for(var k=0;k<newModel["stereoIns"];k++)
+			{
+				var chCont = local.values.stereoIns.getChild(int2Str_2Chars(k+1));
+				chCont.mixSends.removeContainer(int2Str_2Chars(j+1));
+			}
+		}
+	}
+
+	currentModel = newModel;
 
 }
 
@@ -79,71 +234,6 @@ function buildConsole(model)
 function syncConsole()
 {
 
-}
-
-function rebuildConsole(model)
-{
-	// MonoIns, StIns, Mix, Matrix, DCA (MainOuts are always Stereo and Mono)
-	var newChannelNumbers  = [0, 0, 0, 0, 0];
-
-	// If "none", array stay null, and all the channel parameters 
-	if( model =="CL1" ){ newChannelNumbers = [56, 8, 24, 8, 16]; }
-	else if( model =="CL3" ){ newChannelNumbers = [64, 8, 24, 8, 16]; }
-	else if( model =="CL5" ){ newChannelNumbers = [72, 8, 24, 8, 16]; }
-	else if( model =="QL1" ){ newChannelNumbers = [32, 8, 16, 8, 8]; }
-	else if( model =="QL5" ){ newChannelNumbers = [64, 8, 16, 8, 8]; }
-
-
-	for(var j=0;j<5;j++)
-	{
-		var currChCont = local.values.getChild(channelContainerNames[j]);
-
-		if(newChannelNumbers[j] > currentChannelNumbers[j])
-		{
-			for(var i=currentChannelNumbers[j];i<newChannelNumbers[j];i++)
-			{
-				enableChannel(currChCont, int2Str_2Chars(i+1), (j==4)?"dca":"ch");
-			}
-		}
-		else if(newChannelNumbers[j] < currentChannelNumbers[j])
-		{
-			for(var i=newChannelNumbers[j];i<currentChannelNumbers[j];i++)
-			{
-				disableChannel(currChCont, int2Str_2Chars(i+1), (j==4)?"dca":"ch");
-			}
-		}
-	}
-
-
-	currentChannelNumbers = newChannelNumbers;
-}
-
-
-function enableChannel(container, name, type)
-{
-	var ch = container.getChild(name);
-
-	ch.on.setAttribute("enabled", true);
-	ch.level.setAttribute("enabled", true);
-
-	if(type!="dca")
-	{ 
-		ch.pan.setAttribute("enabled", true);
-	}
-}
-
-
-function disableChannel(container, name, type)
-{
-	var ch = container.getChild(name);
-
-	ch.on.setAttribute("enabled", false);
-	ch.level.setAttribute("enabled", false);
-
-	if(type!="dca")
-	{ 
-		ch.pan.setAttribute("enabled", false);
-	}
 }
 
 

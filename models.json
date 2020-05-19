@@ -2,51 +2,51 @@
 	"CL1":
 	{
 		"Type":"CL",
-		"Mono Ins":56,
-		"Stereo Ins":8,
-		"Mix Outs":24,
-		"Matrix Outs":8,
-		"DCAs":16,
-		"Mutes":8
+		"monoIns":56,
+		"stereoIns":8,
+		"mixOuts":24,
+		"matrixOuts":8,
+		"dCAs":16,
+		"muteGroups":8
 	},
 	"CL3":
 	{
 		"Type":"CL",
-		"Mono Ins":64,
-		"Stereo Ins":8,
-		"Mix Outs":24,
-		"Matrix Outs":8,
-		"DCAs":16,
-		"Mutes":8
+		"monoIns":64,
+		"stereoIns":8,
+		"mixOuts":24,
+		"matrixOuts":8,
+		"dCAs":16,
+		"muteGroups":8
 	},
 	"CL5":
 	{
 		"Type":"CL",
-		"Mono Ins":72,
-		"Stereo Ins":8,
-		"Mix Outs":24,
-		"Matrix Outs":8,
-		"DCAs":16,
-		"Mutes":8
+		"monoIns":72,
+		"stereoIns":8,
+		"mixOuts":24,
+		"matrixOuts":8,
+		"dCAs":16,
+		"muteGroups":8
 	},
 	"QL1":
 	{
 		"Type":"QL",
-		"Mono Ins":32,
-		"Stereo Ins":8,
-		"Mix Outs":16,
-		"Matrix Outs":8,
-		"DCAs":16,
-		"Mutes":8
+		"monoIns":32,
+		"stereoIns":8,
+		"mixOuts":16,
+		"matrixOuts":8,
+		"dCAs":16,
+		"muteGroups":8
 	},
 	"QL5":
 	{
 		"Type":"QL",
-		"Mono Ins":64,
-		"Stereo Ins":8,
-		"Mix Outs":16,
-		"Matrix Outs":8,
-		"DCAs":16,
-		"Mutes":8
+		"monoIns":64,
+		"stereoIns":8,
+		"mixOuts":16,
+		"matrixOuts":8,
+		"dCAs":16,
+		"muteGroups":8
 	},
 }

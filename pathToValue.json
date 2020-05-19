@@ -63,7 +63,8 @@
 				{
 					"values":
 					[
-						"pan"
+						"pan",
+						"balance"
 					]
 				},
 				"ToMix":
@@ -124,7 +125,6 @@
 				},
 				"Out":
 				{
-					"container":"stereoMode",
 					"values":
 					[
 						"balance"
@@ -145,7 +145,6 @@
 				},
 				"Out":
 				{
-					"container":"stereoMode",
 					"values":
 					[
 						"balance"
@@ -191,7 +190,6 @@
 				},
 				"Out":
 				{
-					"container":"stereoMode",
 					"values":
 					[
 						"balance"
@@ -200,7 +198,7 @@
 			},
 			"MuteMaster":
 			{
-				"container":"muteMasters",
+				"container":"muteGroups",
 				"index":"x",
 				"values":
 				[

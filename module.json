@@ -32,7 +32,6 @@
 			"type":"Enum",
 			"options":
 			{
-				"Please select...":"none",
 				"CL1":"CL1",
 				"CL3":"CL3",
 				"CL5":"CL5",
@@ -87,6 +86,12 @@
 		},
 
 		"DCAs":
+		{
+			"type":"Container",
+			"collapsed":true
+		},
+
+		"Mute Groups":
 		{
 			"type":"Container",
 			"collapsed":true

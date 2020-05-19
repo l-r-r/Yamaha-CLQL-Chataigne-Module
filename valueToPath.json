@@ -72,7 +72,7 @@
 				"index":"x"
 			}
 		},
-		"muteMasters":
+		"muteGroups":
 		{
 			"path":"MuteMaster/",
 			"index":"x"
