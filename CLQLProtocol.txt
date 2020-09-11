@@ -53,15 +53,18 @@ MIXER:Current/StIn/Fader/On x 0 z
 
 MIXER:Current/StIn/ToSt/Pan x 0 z
 
+MIXER:Current/StIn/Out/Balance x 0 z
+
 MIXER:Current/StIn/ToMix/Level x y z
 MIXER:Current/StIn/ToMix/On x y z
-???	MIXER:Current/StIn/ToMix/Pan x y z
-MIXER:Current/StIn/ToMix/PrePost x 0 z
+
+/!\ MIXER:Current/StInCh/ToMix/Pan x y z
+/!\ MIXER:Current/StInCh/ToMix/PrePost x 0 z
 
 MIXER:Current/StIn/ToMtrx/Level x y z
 MIXER:Current/StIn/ToMtrx/On x y z
-???	MIXER:Current/StIn/ToMtrx/Pan x y z
-MIXER:Current/StIn/ToMtrx/PrePost x 0 z
+/!\ MIXER:Current/StInCh/ToMtrx/Pan x y z
+/!\ MIXER:Current/StInCh/ToMtrx/PrePost x 0 z
 
 
 -- Mix --
@@ -71,10 +74,10 @@ MIXER:Current/Mix/Fader/On x 0 z
 
 MIXER:Current/Mix/ToSt/Pan x 0 z
 
-???	MIXER:Current/Mix/ToMtrx/Level x y z
-???	MIXER:Current/Mix/ToMtrx/On x y z
-???	MIXER:Current/Mix/ToMtrx/Pan x y z
-???	MIXER:Current/Mix/ToMtrx/PrePost x y z
+MIXER:Current/Mix/ToMtrx/Level x y z
+MIXER:Current/Mix/ToMtrx/On x y z
+MIXER:Current/Mix/ToMtrx/Pan x y z
+MIXER:Current/Mix/ToMtrx/PrePost x y z
 
 (if stereo bus)
 MIXER:Current/Mix/Out/Balance x 0 z
@@ -97,10 +100,10 @@ MIXER:Current/St/Fader/On x 0 z
 (x has to be StL=0 or StL=1)
 MIXER:Current/St/Out/Balance x 0 z
 
-???	MIXER:Current/Mix/ToMtrx/Level x y z
-???	MIXER:Current/Mix/ToMtrx/On x y z
-???	MIXER:Current/Mix/ToMtrx/Pan x y z
-???	MIXER:Current/Mix/ToMtrx/PrePost x y z
+MIXER:Current/St/ToMtrx/Level x y z
+MIXER:Current/St/ToMtrx/On x y z
+MIXER:Current/St/ToMtrx/Pan x y z
+MIXER:Current/St/ToMtrx/PrePost x y z
 
 
 -- DCA --
