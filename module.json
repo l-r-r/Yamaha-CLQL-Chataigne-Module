@@ -6,7 +6,7 @@
 	"version":"0.0.1",
 	"description":"Basic control of Yamaha CL/QL consoles over network",
 	"url": "https://github.com/l-r-r/Yamaha-CLQL-Chataigne-Module.git",
-	"downloadURL": "https://github.com/l-r-r/Yamaha-CLQL-Chataigne-Module/archive/master.zip",
+	"downloadURL": "https://github.com/l-r-r/Yamaha-CLQL-Chataigne-Module/archive/refs/heads/master.zip",
 	
 	"hasInput":true,
 	"hasOutput":true, 
